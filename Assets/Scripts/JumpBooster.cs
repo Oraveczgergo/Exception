@@ -15,7 +15,7 @@ public class JumpBooster : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             gameObject.SetActive(false);
-            characterController.DoubleJumpForce();
+            characterController.ExtraJumpForce();
             Invoke("Reactivate", 10f);
         }
     }
