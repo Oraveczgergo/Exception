@@ -5,22 +5,25 @@ using UnityEngine.SceneManagement;
 
 public class CharacterController2D : MonoBehaviour
 {
-    public float movementSpeedInput = 30;
-    public float jumpForceInput = 60;
+    [SerializeField] private LayerMask terrainMask;
     public float maxSpeed = 30f;
     public float decelaration = 10f;
-    private float movementSpeed;
-    private float jumpForce;
+    public float movementSpeed = 30f;
+    public float jumpForce = 60f;
     private HealthScript healthScript;
     private new Rigidbody2D rigidbody;
     private bool jumping = false;
     private bool needJump = false;
+    private bool jumpBoost = false;
+    private bool speedBoost = false;
     private float movement;
+    private BoxCollider2D boxCollider2D;
 
     private void Start()
-    {        rigidbody = GetComponent<Rigidbody2D>();
-        
+    {        
+        rigidbody = GetComponent<Rigidbody2D>();        
         healthScript = (HealthScript)GetComponent("HealthScript");
+        boxCollider2D = transform.GetComponent<BoxCollider2D>();
     }
     private void Update()
     {
@@ -28,28 +31,26 @@ public class CharacterController2D : MonoBehaviour
         if (!jumping && Input.GetKeyDown(KeyCode.Space))
         {
             needJump = true;
+            Invoke("JumpInputCancel", .2f);
         }
     }
 
     private void FixedUpdate()
     {
-        movementSpeed = movementSpeedInput;
-        jumpForce = jumpForceInput;
         if (movement * rigidbody.velocity.x < 0)
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-        if (Mathf.Abs(rigidbody.velocity.x) < maxSpeed)
-            rigidbody.AddForce(new Vector2(movement * movementSpeed, 0), ForceMode2D.Impulse);
+        if (Mathf.Abs(rigidbody.velocity.x) < (speedBoost ? maxSpeed * 1.5f : maxSpeed))
+            rigidbody.AddForce(new Vector2(movement * (speedBoost ? movementSpeed * 1.5f : movementSpeed), 0), ForceMode2D.Impulse);
         if (movement == 0)
         {
             rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
         }
-        //rigidbody.MovePosition(rigidbody.position + new Vector2(movement, 0) * Time.deltaTime * movementSpeed);
-        //transform.position += new Vector3(movement, 0, 0) * Time.deltaTime * movementSpeed;
-        if (needJump)
+        if (Grounded() && needJump)
         {
+            CancelInvoke("JumpInputCancel");
             needJump = false;
             jumping = true;
-            rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            rigidbody.AddForce(new Vector2(0, (jumpBoost ? jumpForce * 1.5f : jumpForce)), ForceMode2D.Impulse);
         }
         if (Input.GetKeyUp(KeyCode.Space) && rigidbody.velocity.y > 0)
         {
@@ -59,31 +60,43 @@ public class CharacterController2D : MonoBehaviour
         {            
             healthScript.Death();
         }
-        if(Mathf.Abs(rigidbody.velocity.y) < 0.003f)
+        //if(Mathf.Abs(rigidbody.velocity.y) < 0.003f)
+        if (Grounded())
         {
             jumping = false;
         }
     }
 
-    public void DoubleSpeed() //TODO: Megoldani boollal, Inputoktól megszabadulni
+    private bool Grounded()
     {
-        movementSpeed = movementSpeedInput * 2;
+        RaycastHit2D raycast = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, .1f, terrainMask);
+        return raycast.collider != null;
+    }
+
+    public void DoubleSpeed()
+    {
+        speedBoost = true;
         Invoke("SpeedReset", 10f);
     }
 
     public void ExtraJumpForce()
     {
-        jumpForce = jumpForceInput * 1.5f;
+        jumpBoost = true;
         Invoke("JumpReset", 10f);
     }
 
     private void SpeedReset()
     {
-        movementSpeed = movementSpeedInput;
+        speedBoost = false;
     }
 
     private void JumpReset()
     {
-        jumpForce = jumpForceInput;
+        jumpBoost = false;
+    }
+
+    private void JumpInputCancel()
+    {
+        needJump = false;
     }
 }

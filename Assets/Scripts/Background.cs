@@ -6,7 +6,7 @@ public class Background : MonoBehaviour
 {
     public float xEffect;
     public float yEffect;
-    public GameObject camera;
+    public GameObject followedObject;
     private float length;
     private Vector3 startPos;
     void Start()
@@ -15,10 +15,10 @@ public class Background : MonoBehaviour
         length = GetComponent<SpriteRenderer>().bounds.size.x;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
-        float xDistance = camera.transform.position.x * xEffect; 
-        float yDistance = camera.transform.position.y * yEffect;
+        float xDistance = followedObject.transform.position.x * xEffect; 
+        float yDistance = followedObject.transform.position.y * yEffect;
         transform.position = new Vector3(startPos.x + xDistance, startPos.y + yDistance, transform.position.z);
     }
 }

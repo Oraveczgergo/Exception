@@ -13,6 +13,7 @@ TagManager:
   - Meteor
   - OP_FBullet
   - FBullet
+  - Terrain
   layers:
   - Default
   - TransparentFX
@@ -20,7 +21,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Terrain
   - 
   - 
   - 
@@ -47,6 +48,18 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BackgroundImage
+    uniqueID: 2737269339
+    locked: 0
+  - name: BackgroundTerrain
+    uniqueID: 3195272823
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Terrain
+    uniqueID: 3415331895
+    locked: 0
+  - name: UI
+    uniqueID: 3082588005
     locked: 0

@@ -15,11 +15,13 @@ public class VehicleController2D : MonoBehaviour
     private CameraScript mainCamera;
     private GenericObjectPooler objectPooler;
     private VehicleHealthScript vehicleHealthScript;
+    private GameObject[] backgroundImages;
 
     private new Rigidbody2D rigidbody;
 
     void Start()
     {
+        backgroundImages = GameObject.FindGameObjectsWithTag("BackgroundImage");
         objectPooler = (GenericObjectPooler)GameObject.FindGameObjectWithTag("OP_FBullet").GetComponent("GenericObjectPooler");
         rigidbody = GetComponent<Rigidbody2D>();
         movementSpeed = movementSpeedInput;
@@ -36,6 +38,7 @@ public class VehicleController2D : MonoBehaviour
     {
         if (inUse)
         {
+            player.transform.position = transform.position;
             healthText.SetActive(false);
             vehicleHealthText.SetActive(true);
             var movement = Input.GetAxis("Horizontal");
@@ -63,6 +66,10 @@ public class VehicleController2D : MonoBehaviour
             inUse = true;          
             player.SetActive(false);
             mainCamera.followedObject = gameObject;
+            foreach(GameObject backgroundImage in backgroundImages)
+            {
+                backgroundImage.GetComponent<Background>().followedObject = gameObject;
+            }
         }
     }
 
@@ -76,6 +83,10 @@ public class VehicleController2D : MonoBehaviour
             player.SetActive(true);
             player.transform.position = transform.position + new Vector3(20, 0);
             mainCamera.followedObject = player;
+            foreach (GameObject backgroundImage in backgroundImages)
+            {
+                backgroundImage.GetComponent<Background>().followedObject = player;
+            }
         }        
     }
 

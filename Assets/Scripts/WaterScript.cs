@@ -4,9 +4,19 @@ using UnityEngine;
 
 public class WaterScript : MonoBehaviour
 {
-    private void Update()
-    {
-
+    public int FramesForUpdate = 10;
+    private int i = 0;
+    private void FixedUpdate()
+    { //228
+        if (transform.localScale.y < 228)
+        {
+            i++;
+            if (i >= FramesForUpdate)
+            {
+                transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y + 1, transform.localScale.z);
+                i = 0;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
