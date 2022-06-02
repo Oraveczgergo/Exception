@@ -15,9 +15,10 @@ public class Bash : MonoBehaviour
     public Transform arrow;
     public float aimingTime = 2f;
     private float tempTime;
+    private Rigidbody2D rb;
     void Start()
     {
-
+         rb = GetComponent<Rigidbody2D>();
     }
 
     void Update()
@@ -74,7 +75,9 @@ public class Bash : MonoBehaviour
         direction = direction.normalized;
         transform.position = target.transform.position + direction * 3;
         RotateBashedObject(target.transform);
-        GetComponent<Rigidbody2D>().velocity = direction * force;
+        rb.velocity = Vector2.zero;
+        rb.angularVelocity = 0;        
+        //rb.AddForce(direction * force);
     }
 
     private void RotateArrowToCursor(Transform o)

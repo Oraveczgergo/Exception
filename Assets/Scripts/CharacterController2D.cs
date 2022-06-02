@@ -6,72 +6,123 @@ using UnityEngine.SceneManagement;
 public class CharacterController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask terrainMask;
-    public float maxSpeed = 30f;
     public float decelaration = 10f;
-    public float movementSpeed = 30f;
-    public float jumpForce = 60f;
+    public float maxNormalSpeed = 30f;
+    public float normalSpeed = 30f;
+    public float normalJumpForce = 60f;
+    public float groundTouchDistance;
     private HealthScript healthScript;
     private new Rigidbody2D rigidbody;
     private bool jumping = false;
     private bool needJump = false;
     private bool jumpBoost = false;
     private bool speedBoost = false;
-    private float movement;
-    private BoxCollider2D boxCollider2D;
+    private bool onGround = false;
+    private float horizontal;
+    private CircleCollider2D circleCollider2D;
 
+    private float speed
+    {
+        get
+        {
+            return (speedBoost ? normalSpeed * 1.5f : normalSpeed);
+        }
+    }
+    private float maxSpeed
+    {
+        get
+        {
+            return (speedBoost ? maxNormalSpeed * 1.5f : maxNormalSpeed);
+        }
+    }
+    private float jumpForce
+    {
+        get
+        {
+            return (jumpBoost ? normalJumpForce * 1.5f : normalJumpForce);
+        }
+    }
     private void Start()
     {        
         rigidbody = GetComponent<Rigidbody2D>();        
         healthScript = (HealthScript)GetComponent("HealthScript");
-        boxCollider2D = transform.GetComponent<BoxCollider2D>();
+        circleCollider2D = transform.GetComponent<CircleCollider2D>();
     }
     private void Update()
     {
-        movement = Input.GetAxis("Horizontal");
+        horizontal = Input.GetAxis("Horizontal");
         if (!jumping && Input.GetKeyDown(KeyCode.Space))
         {
             needJump = true;
             Invoke("JumpInputCancel", .2f);
         }
+        if (Input.GetKeyUp(KeyCode.Space) && jumping)
+        {
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y / 2);
+        }
     }
 
     private void FixedUpdate()
     {
-        if (movement * rigidbody.velocity.x < 0)
+        if (horizontal * rigidbody.velocity.x < 0)
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-        if (Mathf.Abs(rigidbody.velocity.x) < (speedBoost ? maxSpeed * 1.5f : maxSpeed))
-            rigidbody.AddForce(new Vector2(movement * (speedBoost ? movementSpeed * 1.5f : movementSpeed), 0), ForceMode2D.Impulse);
-        if (movement == 0)
+        if (Mathf.Abs(rigidbody.velocity.x) < maxSpeed)
+            rigidbody.AddForce(new Vector2(horizontal * speed, 0), ForceMode2D.Impulse);
+        if (horizontal == 0)
         {
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
+            if (Mathf.Abs(rigidbody.velocity.x) < 0.1f)
+                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            else
+                rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
         }
-        if (Grounded() && needJump)
+        //Debug.Log("Grounded: " + Grounded());
+        //Debug.Log("needJump: " + needJump);
+        if (onGround && needJump)
         {
+            //Debug.Log("Jump!");
             CancelInvoke("JumpInputCancel");
-            needJump = false;
+            needJump = false;                  
             jumping = true;
-            rigidbody.AddForce(new Vector2(0, (jumpBoost ? jumpForce * 1.5f : jumpForce)), ForceMode2D.Impulse);
-        }
-        if (Input.GetKeyUp(KeyCode.Space) && rigidbody.velocity.y > 0)
-        {
-            rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y / 2);
-        }
+            Debug.Log("Jumping: " + jumping);
+            rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+        }        
         if(transform.position.y < -150)
         {            
             healthScript.Death();
         }
         //if(Mathf.Abs(rigidbody.velocity.y) < 0.003f)
-        if (Grounded())
+        if (onGround)
         {
-            jumping = false;
+            //jumping = false;
+            Debug.Log("Jumping: " + jumping);
         }
     }
 
-    private bool Grounded()
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        RaycastHit2D raycast = Physics2D.BoxCast(boxCollider2D.bounds.center, boxCollider2D.bounds.size, 0f, Vector2.down, .1f, terrainMask);
-        return raycast.collider != null;
+        if (collision.gameObject.CompareTag("Terrain") && !jumping)
+        {
+            onGround = true;
+            Debug.Log("Grounded: " + onGround);
+        }
     }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Terrain") && !jumping)
+        {
+            onGround = false;
+            Debug.Log("Grounded: " + onGround);
+        }
+    }
+
+    //private bool Grounded()
+    //{
+    //    //RaycastHit2D raycast = Physics2D.CircleCast(circleCollider2D.bounds.center, circleCollider2D.radius, Vector2.down, groundTouchDistance, terrainMask);
+    //    //return raycast.collider != null;
+    //    return onGround;
+    //}
 
     public void DoubleSpeed()
     {
