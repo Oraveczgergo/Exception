@@ -100,9 +100,10 @@ public class CharacterController2D : MonoBehaviour
 
 
     private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("Terrain") && !jumping)
+    {        
+        if (collision.gameObject.CompareTag("Terrain"))
         {
+            jumping = false;
             onGround = true;
             Debug.Log("Grounded: " + onGround);
         }
@@ -110,7 +111,7 @@ public class CharacterController2D : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Terrain") && !jumping)
+        if (collision.gameObject.CompareTag("Terrain"))
         {
             onGround = false;
             Debug.Log("Grounded: " + onGround);
