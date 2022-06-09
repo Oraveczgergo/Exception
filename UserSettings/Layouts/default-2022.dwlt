@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 1037
   m_ShowMode: 4
-  m_Title: Scene
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 1
-  controlID: 6321
+  controlID: 2961
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -143,7 +143,7 @@ MonoBehaviour:
   m_MinSize: {x: 400, y: 200}
   m_MaxSize: {x: 32384, y: 16192}
   vertical: 0
-  controlID: 6322
+  controlID: 2962
 --- !u!114 &7
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -168,7 +168,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 200}
   m_MaxSize: {x: 24288, y: 16192}
   vertical: 1
-  controlID: 6248
+  controlID: 2903
 --- !u!114 &8
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -194,7 +194,7 @@ MonoBehaviour:
   m_MinSize: {x: 300, y: 100}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
-  controlID: 6249
+  controlID: 2904
 --- !u!114 &9
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -361,7 +361,7 @@ MonoBehaviour:
   m_SerializedViewValues:
   - C:\Geri cucca\Unity\Szakdoga\Exception\Library\PlayModeViewStates\5f2cb1cddacded142abca8132a1efa51
   m_PlayModeViewName: GameView
-  m_ShowGizmos: 1
+  m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
   m_TargetSize: {x: 1920, y: 1080}
@@ -376,7 +376,7 @@ MonoBehaviour:
   m_suppressRenderingForFullscreen: 0
   m_VSyncEnabled: 0
   m_PlayFocused: 0
-  m_Gizmos: 1
+  m_Gizmos: 0
   m_Stats: 0
   m_SelectedSizes: 03000000000000000000000000000000000000000000000000000000000000000000000000000000
   m_ZoomArea:
@@ -393,7 +393,7 @@ MonoBehaviour:
     m_VAllowExceedBaseRangeMin: 1
     m_VAllowExceedBaseRangeMax: 1
     m_ScaleWithWindow: 0
-    m_HSlider: 1
+    m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
     m_EnableMouseInput: 1
@@ -407,18 +407,18 @@ MonoBehaviour:
       y: 21
       width: 749
       height: 634
-    m_Scale: {x: 0.39557543, y: 0.39557543}
-    m_Translation: {x: 369.2476, y: 317}
+    m_Scale: {x: 0.39010417, y: 0.39010417}
+    m_Translation: {x: 374.5, y: 317}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -933.4442
-      y: -801.3642
-      width: 1893.4442
-      height: 1602.7284
+      x: -960
+      y: -812.60345
+      width: 1920
+      height: 1625.2069
     m_MinimalGUI: 1
   m_defaultScale: 0.39010417
   m_LastWindowPixelSize: {x: 749, y: 655}
@@ -462,7 +462,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: f6510000
       m_LastClickedID: 20982
-      m_ExpandedIDs: 10fbffffc2510000d4510000d8510000e4510000f65100003e520000
+      m_ExpandedIDs: 22fbffffcc510000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -836,9 +836,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: 33.31313, y: 83.00432, z: 41.59842}
+    m_Target: {x: 3.4716048, y: 96.13039, z: 36.306763}
     speed: 2
-    m_Value: {x: 33.31313, y: 83.00432, z: 41.59842}
+    m_Value: {x: 3.4716048, y: 96.13039, z: 36.306763}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 31
@@ -888,9 +888,9 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
-    m_Target: 151.04329
+    m_Target: 126.58583
     speed: 2
-    m_Value: 151.04329
+    m_Value: 126.58583
   m_Ortho:
     m_Target: 1
     speed: 2
@@ -971,7 +971,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 178}
     m_SelectedIDs: c6550000
     m_LastClickedID: 21958
-    m_ExpandedIDs: 000000008a5500008c5500008e5500009055000092550000945500009655000000ca9a3b
+    m_ExpandedIDs: 00000000885500008a5500008c5500008e550000905500009255000094550000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -999,7 +999,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000008a5500008c5500008e5500009055000092550000945500009655000000ca9a3b
+    m_ExpandedIDs: 00000000885500008a5500008c5500008e550000905500009255000094550000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

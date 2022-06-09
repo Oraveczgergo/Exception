@@ -20,6 +20,8 @@ public class CharacterController2D : MonoBehaviour
     private bool onGround = false;
     private float horizontal;
     private CircleCollider2D circleCollider2D;
+    private GameObject wayPoint01 = GameObject.FindGameObjectWithTag("WayPoint01");
+    private GameObject wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
 
     private float speed
     {
@@ -60,6 +62,10 @@ public class CharacterController2D : MonoBehaviour
         {
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y / 2);
         }
+        if (Input.GetKeyDown(KeyCode.F1))
+            DebugTeleport(1);
+        if (Input.GetKeyDown(KeyCode.F2))
+            DebugTeleport(2);
     }
 
     private void FixedUpdate()
@@ -83,7 +89,7 @@ public class CharacterController2D : MonoBehaviour
             CancelInvoke("JumpInputCancel");
             needJump = false;                  
             jumping = true;
-            Debug.Log("Jumping: " + jumping);
+            //Debug.Log("Jumping: " + jumping);
             rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
         }        
         if(transform.position.y < -150)
@@ -94,10 +100,22 @@ public class CharacterController2D : MonoBehaviour
         if (onGround)
         {
             //jumping = false;
-            Debug.Log("Jumping: " + jumping);
+            //Debug.Log("Jumping: " + jumping);
         }
     }
 
+    private void DebugTeleport(int id)
+    {
+        switch (id)
+        {
+            case 1:
+                transform.position = wayPoint01.transform.position;
+                break;
+            case 2:
+                transform.position = wayPoint02.transform.position;
+                break;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {        
@@ -105,7 +123,7 @@ public class CharacterController2D : MonoBehaviour
         {
             jumping = false;
             onGround = true;
-            Debug.Log("Grounded: " + onGround);
+            //Debug.Log("Grounded: " + onGround);
         }
     }
 
@@ -114,7 +132,7 @@ public class CharacterController2D : MonoBehaviour
         if (collision.gameObject.CompareTag("Terrain"))
         {
             onGround = false;
-            Debug.Log("Grounded: " + onGround);
+            //Debug.Log("Grounded: " + onGround);
         }
     }
 

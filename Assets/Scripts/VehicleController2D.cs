@@ -4,9 +4,8 @@ using UnityEngine;
 
 public class VehicleController2D : MonoBehaviour
 {
-    public float movementSpeedInput = 30;
     public float jumpForceInput = 60;
-    private float movementSpeed;
+    public float movementSpeed;
     private float jumpForce;
     private bool inUse = false;
     private GameObject player;
@@ -16,6 +15,8 @@ public class VehicleController2D : MonoBehaviour
     private GenericObjectPooler objectPooler;
     private VehicleHealthScript vehicleHealthScript;
     private GameObject[] backgroundImages;
+    private VehicleCameraScript vehicleCameraScript;
+    private GameObject vehicleCamera;
 
     private new Rigidbody2D rigidbody;
 
@@ -23,8 +24,9 @@ public class VehicleController2D : MonoBehaviour
     {
         backgroundImages = GameObject.FindGameObjectsWithTag("BackgroundImage");
         objectPooler = (GenericObjectPooler)GameObject.FindGameObjectWithTag("OP_FBullet").GetComponent("GenericObjectPooler");
+        vehicleCamera = GameObject.FindGameObjectWithTag("VehicleCamera");
+        vehicleCameraScript = vehicleCamera.GetComponent<VehicleCameraScript>();
         rigidbody = GetComponent<Rigidbody2D>();
-        movementSpeed = movementSpeedInput;
         jumpForce = jumpForceInput;
         player = GameObject.FindGameObjectWithTag("Player");
         mainCamera = (CameraScript)GameObject.FindGameObjectWithTag("MainCamera").GetComponent("CameraScript");
@@ -32,20 +34,39 @@ public class VehicleController2D : MonoBehaviour
         vehicleHealthText = GameObject.FindGameObjectWithTag("UI_VehicleHealthText");
         vehicleHealthText.SetActive(false);
         vehicleHealthScript = (VehicleHealthScript)GetComponent("VehicleHealthScript");
+        vehicleCameraScript.SyncSpeed(movementSpeed);
     }
 
     void Update()
     {
         if (inUse)
         {
-            player.transform.position = transform.position;
             healthText.SetActive(false);
             vehicleHealthText.SetActive(true);
-            var movement = Input.GetAxis("Horizontal");
-            transform.position += new Vector3(movement, 0, 0) * Time.deltaTime * movementSpeed;
+            //if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+            //{
+                var movement = Input.GetAxis("Horizontal");
+                switch (movement)
+                {
+                    case 0:
+                        NormalMovement();
+                        vehicleCameraScript.NormalMovement();
+                        break;
+                    case 1:
+                        FastMovement();
+                        vehicleCameraScript.FastMovement();
+                        break;
+                    case -1:
+                        SlowMovement();
+                        vehicleCameraScript.SlowMovement();
+                        break;
+                }
+            //}
+            //transform.position += new Vector3(movement, 0, 0) * Time.deltaTime * movementSpeed;
             if (Input.GetButtonDown("Jump"))
             {
-                rigidbody.velocity = (new Vector2(0, jumpForce));
+                rigidbody.velocity *= Vector2.right;
+                rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             }
             //player.transform.position = transform.position;
         }
@@ -58,25 +79,44 @@ public class VehicleController2D : MonoBehaviour
             vehicleHealthScript.TakeDamage(999);
         }
     }
+    private void NormalMovement()
+    {
+        rigidbody.velocity *= Vector2.up;
+        rigidbody.AddForce(new Vector2(movementSpeed, 0), ForceMode2D.Impulse);
+    }
+
+    private void FastMovement()
+    {
+        rigidbody.velocity *= Vector2.up;
+        rigidbody.AddForce(new Vector2(movementSpeed * 1.5f, 0), ForceMode2D.Impulse);
+    }
+
+    private void SlowMovement()
+    {
+        rigidbody.velocity *= Vector2.up;
+        rigidbody.AddForce(new Vector2(movementSpeed / 1.5f, 0), ForceMode2D.Impulse);
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
         {
-            inUse = true;          
+            inUse = true;
             player.SetActive(false);
-            mainCamera.followedObject = gameObject;
-            foreach(GameObject backgroundImage in backgroundImages)
+            vehicleCamera.transform.position = transform.position;
+            mainCamera.followedObject = vehicleCamera;
+            foreach (GameObject backgroundImage in backgroundImages)
             {
-                backgroundImage.GetComponent<Background>().followedObject = gameObject;
+                backgroundImage.GetComponent<Background>().followedObject = vehicleCamera;
             }
         }
     }
 
     public void LeaveVehicle()
     {
-        if(inUse)
+        if (inUse)
         {
+            transform.position = GameObject.FindGameObjectWithTag("VehicleLandPoint").transform.position;
             inUse = false;
             healthText.SetActive(true);
             vehicleHealthText.SetActive(false);
@@ -87,7 +127,7 @@ public class VehicleController2D : MonoBehaviour
             {
                 backgroundImage.GetComponent<Background>().followedObject = player;
             }
-        }        
+        }
     }
 
     private void Fire()
