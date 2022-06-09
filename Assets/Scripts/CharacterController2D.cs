@@ -20,8 +20,8 @@ public class CharacterController2D : MonoBehaviour
     private bool onGround = false;
     private float horizontal;
     private CircleCollider2D circleCollider2D;
-    private GameObject wayPoint01 = GameObject.FindGameObjectWithTag("WayPoint01");
-    private GameObject wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
+    private GameObject wayPoint01;
+    private GameObject wayPoint02;
 
     private float speed
     {
@@ -45,7 +45,9 @@ public class CharacterController2D : MonoBehaviour
         }
     }
     private void Start()
-    {        
+    {
+        wayPoint01 = GameObject.FindGameObjectWithTag("WayPoint01");
+        wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
         rigidbody = GetComponent<Rigidbody2D>();        
         healthScript = (HealthScript)GetComponent("HealthScript");
         circleCollider2D = transform.GetComponent<CircleCollider2D>();
