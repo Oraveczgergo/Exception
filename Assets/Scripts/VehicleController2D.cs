@@ -7,7 +7,9 @@ public class VehicleController2D : MonoBehaviour
     public float jumpForceInput = 60;
     public float movementSpeed;
     private float jumpForce;
-    private bool inUse = false;
+    public bool inUse = false;
+    private bool disabled = false;
+    private bool disableJump = false;
     private GameObject player;
     private GameObject healthText;
     private GameObject vehicleHealthText;
@@ -45,25 +47,25 @@ public class VehicleController2D : MonoBehaviour
             vehicleHealthText.SetActive(true);
             //if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
             //{
-                var movement = Input.GetAxis("Horizontal");
-                switch (movement)
-                {
-                    case 0:
-                        NormalMovement();
-                        vehicleCameraScript.NormalMovement();
-                        break;
-                    case 1:
-                        FastMovement();
-                        vehicleCameraScript.FastMovement();
-                        break;
-                    case -1:
-                        SlowMovement();
-                        vehicleCameraScript.SlowMovement();
-                        break;
-                }
+            var movement = Input.GetAxis("Horizontal");
+            switch (movement)
+            {
+                case 0:
+                    NormalMovement();
+                    vehicleCameraScript.NormalMovement();
+                    break;
+                case 1:
+                    FastMovement();
+                    vehicleCameraScript.FastMovement();
+                    break;
+                case -1:
+                    SlowMovement();
+                    vehicleCameraScript.SlowMovement();
+                    break;
+            }
             //}
             //transform.position += new Vector3(movement, 0, 0) * Time.deltaTime * movementSpeed;
-            if (Input.GetButtonDown("Jump"))
+            if (Input.GetButtonDown("Jump") && !disableJump)
             {
                 rigidbody.velocity *= Vector2.right;
                 rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
@@ -76,7 +78,10 @@ public class VehicleController2D : MonoBehaviour
         }
         if (transform.position.y < -150)
         {
-            vehicleHealthScript.TakeDamage(999);
+            if (inUse)
+                vehicleHealthScript.Death();
+            else
+                gameObject.SetActive(false);
         }
     }
     private void NormalMovement()
@@ -88,20 +93,21 @@ public class VehicleController2D : MonoBehaviour
     private void FastMovement()
     {
         rigidbody.velocity *= Vector2.up;
-        rigidbody.AddForce(new Vector2(movementSpeed * 1.5f, 0), ForceMode2D.Impulse);
+        rigidbody.AddForce(new Vector2(movementSpeed * 2f, 0), ForceMode2D.Impulse);
     }
 
     private void SlowMovement()
     {
         rigidbody.velocity *= Vector2.up;
-        rigidbody.AddForce(new Vector2(movementSpeed / 1.5f, 0), ForceMode2D.Impulse);
+        rigidbody.AddForce(new Vector2(movementSpeed / 2f, 0), ForceMode2D.Impulse);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Player" && !disabled)
         {
             inUse = true;
+            disabled = true;
             player.SetActive(false);
             vehicleCamera.transform.position = transform.position;
             mainCamera.followedObject = vehicleCamera;
@@ -114,20 +120,19 @@ public class VehicleController2D : MonoBehaviour
 
     public void LeaveVehicle()
     {
-        if (inUse)
+        vehicleCamera.SetActive(false);
+        transform.position = GameObject.FindGameObjectWithTag("VehicleLandPoint").transform.position;
+        rigidbody.velocity = Vector2.zero;
+        healthText.SetActive(true);
+        vehicleHealthText.SetActive(false);
+        player.SetActive(true);
+        player.transform.position = transform.position + new Vector3(20, 0);
+        mainCamera.followedObject = player;
+        foreach (GameObject backgroundImage in backgroundImages)
         {
-            transform.position = GameObject.FindGameObjectWithTag("VehicleLandPoint").transform.position;
-            inUse = false;
-            healthText.SetActive(true);
-            vehicleHealthText.SetActive(false);
-            player.SetActive(true);
-            player.transform.position = transform.position + new Vector3(20, 0);
-            mainCamera.followedObject = player;
-            foreach (GameObject backgroundImage in backgroundImages)
-            {
-                backgroundImage.GetComponent<Background>().followedObject = player;
-            }
+            backgroundImage.GetComponent<Background>().followedObject = player;
         }
+
     }
 
     private void Fire()
@@ -145,5 +150,20 @@ public class VehicleController2D : MonoBehaviour
         diff.Normalize();
         float rotation_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
         o.transform.rotation = Quaternion.Euler(0f, 0f, rotation_z);
+    }
+
+    public void VehicleAboveCamBounds()
+    {
+        disableJump = true;
+    }
+
+    public void VehicleBackInCamBounds()
+    {
+        disableJump = false;
+    }
+
+    public void VehicleBelowCamBounds()
+    {
+        vehicleHealthScript.Death();
     }
 }

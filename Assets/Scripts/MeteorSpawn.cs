@@ -37,8 +37,7 @@ public class MeteorSpawn : MonoBehaviour
     {
         GameObject gameObject = objectPooler.GetPooledObject();
         if (gameObject == null) return;
-        //gameObject.transform.rotation = transform.rotation;
-        gameObject.transform.position = new Vector3(Target.transform.position.x + Random.Range(-40, 40), Target.transform.position.y +50);
+        gameObject.transform.position = new Vector3(Target.transform.position.x + Random.Range(-40, 40), Target.transform.position.y +70);
         gameObject.SetActive(true);
     }
 }
