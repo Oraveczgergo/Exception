@@ -11,7 +11,7 @@ public class CharacterController2D : MonoBehaviour
     public float normalSpeed = 30f;
     public float normalJumpForce = 60f;
     public float groundTouchDistance;
-    private float jumpAngleTreshold = 10f;
+    private float jumpAngleTreshold = 60f;
     private HealthScript healthScript;
     private new Rigidbody2D rigidbody;
     public bool canJump = false;
@@ -86,16 +86,12 @@ public class CharacterController2D : MonoBehaviour
             else
                 rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
         }
-        //Debug.Log("Grounded: " + Grounded());
-        //Debug.Log("needJump: " + needJump);
         if (canJump && needJump)
         {
             jumpReleased = false;
-            //Debug.Log("Jump!");
             CancelInvoke("JumpInputCancel");
             needJump = false;
-            //canJump = true;
-            //Debug.Log("Jumping: " + jumping);
+            StopVerticalVelocity();
             rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
         }
         if (transform.position.y < -150)
@@ -174,6 +170,10 @@ public class CharacterController2D : MonoBehaviour
     //    return onGround;
     //}
 
+    private void StopVerticalVelocity()
+    {
+        rigidbody.velocity *= Vector2.right;
+    }
     public void DoubleSpeed()
     {
         speedBoost = true;
