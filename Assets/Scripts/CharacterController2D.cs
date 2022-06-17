@@ -11,13 +11,15 @@ public class CharacterController2D : MonoBehaviour
     public float normalSpeed = 30f;
     public float normalJumpForce = 60f;
     public float groundTouchDistance;
+    private float jumpAngleTreshold = 10f;
     private HealthScript healthScript;
     private new Rigidbody2D rigidbody;
-    private bool jumping = false;
+    public bool canJump = false;
     private bool needJump = false;
     private bool jumpBoost = false;
     private bool speedBoost = false;
-    private bool onGround = false;
+    private bool jumpReleased = false;
+    //private bool onGround = false;
     private float horizontal;
     private CircleCollider2D circleCollider2D;
     private GameObject wayPoint01;
@@ -48,20 +50,21 @@ public class CharacterController2D : MonoBehaviour
     {
         wayPoint01 = GameObject.FindGameObjectWithTag("WayPoint01");
         wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
-        rigidbody = GetComponent<Rigidbody2D>();        
+        rigidbody = GetComponent<Rigidbody2D>();
         healthScript = (HealthScript)GetComponent("HealthScript");
         circleCollider2D = transform.GetComponent<CircleCollider2D>();
     }
     private void Update()
     {
         horizontal = Input.GetAxis("Horizontal");
-        if (!jumping && Input.GetKeyDown(KeyCode.Space))
+        if (canJump && Input.GetKeyDown(KeyCode.Space))
         {
             needJump = true;
             Invoke("JumpInputCancel", .2f);
         }
-        if (Input.GetKeyUp(KeyCode.Space) && jumping)
+        if (Input.GetKeyUp(KeyCode.Space) && rigidbody.velocity.y > 0f && !jumpReleased)
         {
+            jumpReleased = true;
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y / 2);
         }
         if (Input.GetKeyDown(KeyCode.F1))
@@ -85,25 +88,26 @@ public class CharacterController2D : MonoBehaviour
         }
         //Debug.Log("Grounded: " + Grounded());
         //Debug.Log("needJump: " + needJump);
-        if (onGround && needJump)
+        if (canJump && needJump)
         {
+            jumpReleased = false;
             //Debug.Log("Jump!");
             CancelInvoke("JumpInputCancel");
-            needJump = false;                  
-            jumping = true;
+            needJump = false;
+            //canJump = true;
             //Debug.Log("Jumping: " + jumping);
             rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-        }        
-        if(transform.position.y < -150)
-        {            
+        }
+        if (transform.position.y < -150)
+        {
             healthScript.Death();
         }
         //if(Mathf.Abs(rigidbody.velocity.y) < 0.003f)
-        if (onGround)
-        {
-            //jumping = false;
-            //Debug.Log("Jumping: " + jumping);
-        }
+        //if (onGround)
+        //{
+        //    //jumping = false;
+        //    //Debug.Log("Jumping: " + jumping);
+        //}
     }
 
     private void DebugTeleport(int id)
@@ -118,25 +122,50 @@ public class CharacterController2D : MonoBehaviour
                 break;
         }
     }
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {        
-        if (collision.gameObject.CompareTag("Terrain"))
-        {
-            jumping = false;
-            onGround = true;
-            //Debug.Log("Grounded: " + onGround);
-        }
-    }
-
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Terrain"))
         {
-            onGround = false;
-            //Debug.Log("Grounded: " + onGround);
+            Vector2 validDirection = Vector2.up;
+            foreach (ContactPoint2D contactPoint in collision.contacts)
+            {
+                if (Vector2.Angle(contactPoint.normal, validDirection) <= jumpAngleTreshold)
+                {
+                    canJump = true;
+                    Debug.Log("Enter");
+                    break;
+                }
+            }
         }
     }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Terrain"))
+        {
+            canJump = false;
+            Debug.Log("Exit");
+        }
+    }
+
+    //private void OnTriggerEnter2D(Collider2D collision)
+    //{        
+    //    if (collision.gameObject.CompareTag("Terrain"))
+    //    {
+    //        //canJump = false;
+    //        onGround = true;
+    //        //Debug.Log("Grounded: " + onGround);
+    //    }
+    //}
+
+    //private void OnTriggerExit2D(Collider2D collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Terrain"))
+    //    {
+    //        onGround = false;
+    //        //Debug.Log("Grounded: " + onGround);
+    //    }
+    //}
 
     //private bool Grounded()
     //{
