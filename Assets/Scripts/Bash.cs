@@ -77,7 +77,7 @@ public class Bash : MonoBehaviour
         RotateBashedObject(target.transform);
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0;        
-        //rb.AddForce(direction * force);
+        rb.AddForce(direction * force, ForceMode2D.Impulse);      
     }
 
     private void RotateArrowToCursor(Transform o)

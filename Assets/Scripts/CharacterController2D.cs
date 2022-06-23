@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class CharacterController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask terrainMask;
-    public float decelaration = 10f;
+    //public float decelaration = 10f;
     public float maxNormalSpeed = 30f;
     public float normalSpeed = 30f;
     public float normalJumpForce = 60f;
@@ -19,11 +19,13 @@ public class CharacterController2D : MonoBehaviour
     private bool jumpBoost = false;
     private bool speedBoost = false;
     private bool jumpReleased = false;
+    private bool canDecelerate = false;
     //private bool onGround = false;
     private float horizontal;
     private CircleCollider2D circleCollider2D;
     private GameObject wayPoint01;
     private GameObject wayPoint02;
+    private GameObject wayPoint03;
 
     private float speed
     {
@@ -50,6 +52,7 @@ public class CharacterController2D : MonoBehaviour
     {
         wayPoint01 = GameObject.FindGameObjectWithTag("WayPoint01");
         wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
+        wayPoint03 = GameObject.FindGameObjectWithTag("WayPoint03");
         rigidbody = GetComponent<Rigidbody2D>();
         healthScript = (HealthScript)GetComponent("HealthScript");
         circleCollider2D = transform.GetComponent<CircleCollider2D>();
@@ -57,7 +60,7 @@ public class CharacterController2D : MonoBehaviour
     private void Update()
     {
         horizontal = Input.GetAxis("Horizontal");
-        if (canJump && Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             needJump = true;
             Invoke("JumpInputCancel", .2f);
@@ -71,6 +74,8 @@ public class CharacterController2D : MonoBehaviour
             DebugTeleport(1);
         if (Input.GetKeyDown(KeyCode.F2))
             DebugTeleport(2);
+        if (Input.GetKeyDown(KeyCode.F3))
+            DebugTeleport(3);
     }
 
     private void FixedUpdate()
@@ -79,12 +84,13 @@ public class CharacterController2D : MonoBehaviour
             rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
         if (Mathf.Abs(rigidbody.velocity.x) < maxSpeed)
             rigidbody.AddForce(new Vector2(horizontal * speed, 0), ForceMode2D.Impulse);
-        if (horizontal == 0)
+        if (horizontal == 0 && canDecelerate)
         {
-            if (Mathf.Abs(rigidbody.velocity.x) < 0.1f)
-                rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-            else
-                rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
+            rigidbody.velocity *= Vector2.up;
+            //if (Mathf.Abs(rigidbody.velocity.x) < 0.1f)
+            //rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            // else
+            //rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
         }
         if (canJump && needJump)
         {
@@ -98,12 +104,6 @@ public class CharacterController2D : MonoBehaviour
         {
             healthScript.Death();
         }
-        //if(Mathf.Abs(rigidbody.velocity.y) < 0.003f)
-        //if (onGround)
-        //{
-        //    //jumping = false;
-        //    //Debug.Log("Jumping: " + jumping);
-        //}
     }
 
     private void DebugTeleport(int id)
@@ -116,6 +116,9 @@ public class CharacterController2D : MonoBehaviour
             case 2:
                 transform.position = wayPoint02.transform.position;
                 break;
+            case 3:
+                transform.position = wayPoint03.transform.position;
+                break;
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -127,6 +130,7 @@ public class CharacterController2D : MonoBehaviour
             {
                 if (Vector2.Angle(contactPoint.normal, validDirection) <= jumpAngleTreshold)
                 {
+                    canDecelerate = true; ;
                     canJump = true;
                     Debug.Log("Enter");
                     break;
@@ -139,6 +143,7 @@ public class CharacterController2D : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Terrain"))
         {
+            canDecelerate = false;
             canJump = false;
             Debug.Log("Exit");
         }

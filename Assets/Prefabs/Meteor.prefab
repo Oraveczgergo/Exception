@@ -101,7 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cf38085dc05f1c42b967fd7564ca10b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ProjectileSpeed: 35
+  ProjectileSpeed: 45
 --- !u!114 &7756803684146074439
 MonoBehaviour:
   m_ObjectHideFlags: 0
