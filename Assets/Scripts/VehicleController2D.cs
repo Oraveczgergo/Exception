@@ -45,6 +45,7 @@ public class VehicleController2D : MonoBehaviour
         {
             healthText.SetActive(false);
             vehicleHealthText.SetActive(true);
+            //gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             //if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
             //{
             var movement = Input.GetAxis("Horizontal");

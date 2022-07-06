@@ -7,8 +7,8 @@ public class CharacterController2D : MonoBehaviour
 {
     [SerializeField] private LayerMask terrainMask;
     //public float decelaration = 10f;
-    public float maxNormalSpeed = 30f;
-    public float normalSpeed = 30f;
+    public float maxMovementSpeed = 30f;
+    public float movementSpeed = 30f;
     public float normalJumpForce = 60f;
     public float groundTouchDistance;
     private float jumpAngleTreshold = 60f;
@@ -26,19 +26,20 @@ public class CharacterController2D : MonoBehaviour
     private GameObject wayPoint01;
     private GameObject wayPoint02;
     private GameObject wayPoint03;
+    private GameObject wayPoint04;
 
     private float speed
     {
         get
         {
-            return (speedBoost ? normalSpeed * 1.5f : normalSpeed);
+            return (speedBoost ? movementSpeed * 1.5f : movementSpeed);
         }
     }
     private float maxSpeed
     {
         get
         {
-            return (speedBoost ? maxNormalSpeed * 1.5f : maxNormalSpeed);
+            return (speedBoost ? maxMovementSpeed * 1.5f : maxMovementSpeed);
         }
     }
     private float jumpForce
@@ -53,6 +54,7 @@ public class CharacterController2D : MonoBehaviour
         wayPoint01 = GameObject.FindGameObjectWithTag("WayPoint01");
         wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
         wayPoint03 = GameObject.FindGameObjectWithTag("WayPoint03");
+        wayPoint04 = GameObject.FindGameObjectWithTag("WayPoint04");
         rigidbody = GetComponent<Rigidbody2D>();
         healthScript = (HealthScript)GetComponent("HealthScript");
         circleCollider2D = transform.GetComponent<CircleCollider2D>();
@@ -76,6 +78,8 @@ public class CharacterController2D : MonoBehaviour
             DebugTeleport(2);
         if (Input.GetKeyDown(KeyCode.F3))
             DebugTeleport(3);
+        if (Input.GetKeyDown(KeyCode.F4))
+            DebugTeleport(4);
     }
 
     private void FixedUpdate()
@@ -119,6 +123,9 @@ public class CharacterController2D : MonoBehaviour
             case 3:
                 transform.position = wayPoint03.transform.position;
                 break;
+            case 4:
+                transform.position = wayPoint04.transform.position;
+                break;
         }
     }
     private void OnCollisionEnter2D(Collision2D collision)
@@ -132,7 +139,7 @@ public class CharacterController2D : MonoBehaviour
                 {
                     canDecelerate = true; ;
                     canJump = true;
-                    Debug.Log("Enter");
+                    //Debug.Log("Enter");
                     break;
                 }
             }
@@ -145,7 +152,7 @@ public class CharacterController2D : MonoBehaviour
         {
             canDecelerate = false;
             canJump = false;
-            Debug.Log("Exit");
+            //Debug.Log("Exit");
         }
     }
 
