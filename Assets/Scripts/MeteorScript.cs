@@ -26,7 +26,7 @@ public class MeteorScript : MonoBehaviour
     {
         if (SmokeEffect != null)
             SmokeEffect.Stop();
-        Invoke("Disable", 5f);
+        Invoke("Disable", 8f);
         canMove = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
     }

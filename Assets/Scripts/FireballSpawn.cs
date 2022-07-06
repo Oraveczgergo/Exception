@@ -37,7 +37,7 @@ public class FireballSpawn : MonoBehaviour
     {
         GameObject gameObject = objectPooler.GetPooledObject();
         if (gameObject == null) return;
-        gameObject.transform.position = new Vector3(Target.transform.position.x +100, Target.transform.position.y + Random.Range(-20, 20));
+        gameObject.transform.position = new Vector3(Target.transform.position.x +150, Target.transform.position.y + Random.Range(-20, 20));
         gameObject.SetActive(true);
     }
 }
