@@ -28,7 +28,7 @@ public class Bash : MonoBehaviour
             objects = Physics2D.CircleCastAll(transform.position, Range, Vector3.forward);
             foreach (RaycastHit2D o in objects)
             {
-                if (o.collider.gameObject.CompareTag("Bullet"))
+                if (o.collider.gameObject.CompareTag("Bullet") || o.collider.gameObject.CompareTag("Bashable"))
                 {
                     Time.timeScale = 0;
                     objectFound = true;

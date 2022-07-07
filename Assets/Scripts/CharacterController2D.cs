@@ -130,6 +130,7 @@ public class CharacterController2D : MonoBehaviour
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log("Enter");
         if (collision.gameObject.CompareTag("Terrain"))
         {
             Vector2 validDirection = Vector2.up;
@@ -139,7 +140,7 @@ public class CharacterController2D : MonoBehaviour
                 {
                     canDecelerate = true; ;
                     canJump = true;
-                    //Debug.Log("Enter");
+                    Debug.Log("CanJump");
                     break;
                 }
             }

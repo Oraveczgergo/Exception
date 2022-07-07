@@ -10,6 +10,13 @@ public class HealthScript : MonoBehaviour
     public TMPro.TMP_Text healthText;
     public float invulnerabilityAfterHit = 0.5f;
     private float damageTime = 0;
+    public float spikeKnockback = 20f;
+    private Rigidbody2D rigidbody;
+
+    private void Start()
+    {
+        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+    }
 
     public void TakeDamage(int x)
     {
@@ -19,6 +26,18 @@ public class HealthScript : MonoBehaviour
             currentHealth -= x;
             damageTime = Time.fixedTime;
         }        
+        if (currentHealth <= 0)
+            Death();
+    }
+
+    public void TakeSpikeDamage(int x)
+    {
+        if (Time.fixedTime - damageTime > invulnerabilityAfterHit)
+        {
+            currentHealth -= x;
+            damageTime = Time.fixedTime;
+            rigidbody.AddForce(new Vector2(0, spikeKnockback), ForceMode2D.Impulse);
+        }
         if (currentHealth <= 0)
             Death();
     }
