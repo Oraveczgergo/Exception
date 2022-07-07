@@ -36,6 +36,7 @@ public class HealthScript : MonoBehaviour
         {
             currentHealth -= x;
             damageTime = Time.fixedTime;
+            rigidbody.velocity *= Vector2.right;
             rigidbody.AddForce(new Vector2(0, spikeKnockback), ForceMode2D.Impulse);
         }
         if (currentHealth <= 0)

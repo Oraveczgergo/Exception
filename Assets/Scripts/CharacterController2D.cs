@@ -12,6 +12,7 @@ public class CharacterController2D : MonoBehaviour
     public float normalJumpForce = 60f;
     public float groundTouchDistance;
     private float jumpAngleTreshold = 60f;
+    public float bounceForce = 5f;
     private HealthScript healthScript;
     private new Rigidbody2D rigidbody;
     public bool canJump = false;
@@ -128,23 +129,41 @@ public class CharacterController2D : MonoBehaviour
                 break;
         }
     }
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionStay2D(Collision2D collision)
     {
-        Debug.Log("Enter");
+        //Debug.Log("Enter");        
         if (collision.gameObject.CompareTag("Terrain"))
         {
-            Vector2 validDirection = Vector2.up;
-            foreach (ContactPoint2D contactPoint in collision.contacts)
+            if (!HasCollidedWithGround(collision.contacts))
             {
-                if (Vector2.Angle(contactPoint.normal, validDirection) <= jumpAngleTreshold)
-                {
-                    canDecelerate = true; ;
-                    canJump = true;
-                    Debug.Log("CanJump");
-                    break;
-                }
-            }
+                canJump = false;
+                //BounceByWall(collision.GetContact(0));
+            }            
         }
+    }
+
+    //private void BounceByWall(ContactPoint2D point)
+    //{
+    //    Vector2 direction = Vector2.Reflect(rigidbody.velocity.normalized, point.normal);
+    //    rigidbody.AddForce(direction * bounceForce, ForceMode2D.Impulse);
+    //}
+
+    private bool HasCollidedWithGround(ContactPoint2D[] contacts)
+    {
+        Vector2 validDirection = Vector2.up;
+        foreach (ContactPoint2D contactPoint in contacts)
+        {
+            if (Vector2.Angle(contactPoint.normal, validDirection) <= jumpAngleTreshold)
+            {
+                Debug.Log("Ground: " + contactPoint);
+                canDecelerate = true;
+                canJump = true;
+                //Debug.Log("CanJump");
+                return true;
+            }
+            Debug.Log("NotGround: " + contactPoint);
+        }
+        return false;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
