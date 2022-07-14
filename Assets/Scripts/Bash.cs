@@ -8,10 +8,11 @@ public class Bash : MonoBehaviour
     RaycastHit2D[] objects;
     Vector3 direction;
     public float force = 1f;
-    bool objectFound = false;
-    float minDistance = float.MaxValue;
-    float currentDistance;
-    GameObject target;
+    private bool needRotate = false;
+    private bool objectFound = false;
+    private float minDistance = float.MaxValue;
+    private float currentDistance;
+    private GameObject target;
     public Transform arrow;
     public float aimingTime = 2f;
     private float tempTime;
@@ -28,6 +29,7 @@ public class Bash : MonoBehaviour
             objects = Physics2D.CircleCastAll(transform.position, Range, Vector3.forward);
             foreach (RaycastHit2D o in objects)
             {
+                Debug.Log(o.collider.gameObject.name);
                 if (o.collider.gameObject.CompareTag("Bullet") || o.collider.gameObject.CompareTag("Bashable"))
                 {
                     Time.timeScale = 0;
@@ -38,6 +40,10 @@ public class Bash : MonoBehaviour
                     {
                         minDistance = currentDistance;
                         target = o.collider.gameObject;
+                        if (target.CompareTag("Bullet"))
+                            needRotate = true;
+                        if (target.CompareTag("Bashable"))
+                            needRotate = false;
                     }
                 }
             }
@@ -50,7 +56,7 @@ public class Bash : MonoBehaviour
             }
         }
         else if (Input.GetButtonUp("Fire2") && objectFound)
-        {
+        {            
             Ability();
         }
         else if (Input.GetButton("Fire2") && objectFound)
@@ -74,7 +80,8 @@ public class Bash : MonoBehaviour
         direction.z = 0;
         direction = direction.normalized;
         transform.position = target.transform.position + direction * 3;
-        RotateBashedObject(target.transform);
+        if (needRotate)
+            RotateBashedObject(target.transform);
         rb.velocity = Vector2.zero;
         rb.angularVelocity = 0;        
         rb.AddForce(direction * force, ForceMode2D.Impulse);      

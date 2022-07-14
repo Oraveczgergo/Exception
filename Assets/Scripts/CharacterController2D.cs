@@ -155,13 +155,13 @@ public class CharacterController2D : MonoBehaviour
         {
             if (Vector2.Angle(contactPoint.normal, validDirection) <= jumpAngleTreshold)
             {
-                Debug.Log("Ground: " + contactPoint);
+                //Debug.Log("Ground: " + contactPoint);
                 canDecelerate = true;
                 canJump = true;
                 //Debug.Log("CanJump");
                 return true;
             }
-            Debug.Log("NotGround: " + contactPoint);
+            //Debug.Log("NotGround: " + contactPoint);
         }
         return false;
     }
