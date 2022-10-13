@@ -14,6 +14,16 @@ TagManager:
   - OP_FBullet
   - FBullet
   - Terrain
+  - Bashable
+  - BackgroundImage
+  - VehicleCamera
+  - WayPoint02
+  - WayPoint03
+  - WayPoint01
+  - VehicleLandPoint
+  - WayPoint04
+  - OP_Fireball
+  - Powerup
   layers:
   - Default
   - TransparentFX

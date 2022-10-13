@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class BulletScript : MonoBehaviour
 {
-    public float ProjectileSpeed = 60f;
+    public float projectileSpeed = 60f;
+    public float duration = 2f;
     void FixedUpdate()
     {
-        transform.Translate(ProjectileSpeed * Time.deltaTime, 0, 0);
+        transform.Translate(projectileSpeed * Time.deltaTime, 0, 0);
     }                                           
 
     void OnEnable()
     {
-        Invoke("Deactivate", 2f);
+        Invoke("Deactivate", duration);
     }
 
     void Deactivate()

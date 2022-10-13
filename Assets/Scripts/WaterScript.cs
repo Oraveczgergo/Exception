@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class WaterScript : MonoBehaviour
 {
+    private bool isOn = false;
     public int FramesForUpdate = 10;
     private int i = 0;
     private void FixedUpdate()
     { //228
-        if (transform.localScale.y < 228)
+        if (transform.localScale.y < 228 && isOn)
         {
             i++;
             if (i >= FramesForUpdate)
@@ -18,7 +19,6 @@ public class WaterScript : MonoBehaviour
             }
         }
     }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Player")
@@ -29,5 +29,17 @@ public class WaterScript : MonoBehaviour
         {
             collision.gameObject.GetComponent<VehicleHealthScript>().Death();
         }
+        if (collision.gameObject.tag == "Powerup")
+        {
+            collision.gameObject.SetActive(false);
+        }
+    }
+    public void WaterStart()
+    {
+        isOn = true;
+    }
+    public void WaterStop()
+    {
+        isOn = false;
     }
 }

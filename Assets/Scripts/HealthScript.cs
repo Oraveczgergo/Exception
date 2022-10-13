@@ -11,11 +11,11 @@ public class HealthScript : MonoBehaviour
     public float invulnerabilityAfterHit = 0.5f;
     private float damageTime = 0;
     public float spikeKnockback = 20f;
-    private Rigidbody2D rigidbody;
+    private Rigidbody2D rigidBody;
 
     private void Start()
     {
-        rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        rigidBody = gameObject.GetComponent<Rigidbody2D>();
     }
 
     public void TakeDamage(int x)
@@ -36,8 +36,8 @@ public class HealthScript : MonoBehaviour
         {
             currentHealth -= x;
             damageTime = Time.fixedTime;
-            rigidbody.velocity *= Vector2.right;
-            rigidbody.AddForce(new Vector2(0, spikeKnockback), ForceMode2D.Impulse);
+            rigidBody.velocity *= Vector2.right;
+            rigidBody.AddForce(new Vector2(0, spikeKnockback), ForceMode2D.Impulse);
         }
         if (currentHealth <= 0)
             Death();

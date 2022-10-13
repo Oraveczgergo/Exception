@@ -14,7 +14,7 @@ public class BulletCollisionWithDamage : MonoBehaviour
         if (collision.gameObject.tag == "Bullet")
         {            
             collision.gameObject.SetActive(false);
-            healthScript.TakeDamage(1);
+            healthScript.TakeDamage(5);
         }
     }
 }

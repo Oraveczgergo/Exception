@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 1514783812754463270}
   m_Layer: 0
   m_Name: HealthPickup
-  m_TagString: Untagged
+  m_TagString: Powerup
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -110,6 +110,12 @@ CircleCollider2D:
   m_ForceReceiveLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -128,7 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ada8bb7360ec7fa42916222392bfa52c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healAmount: 2
+  healAmount: 10
 --- !u!1001 &152723458835411093
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -186,6 +192,7 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0afbc306190a8cf4595662ee7dc42f40, type: 3}

@@ -5,7 +5,7 @@ using UnityEngine;
 public class HealthPickup : MonoBehaviour
 {
     private HealthScript healthScript;
-    public int healAmount = 2;
+    public int healAmount = 10;
     private void Start()
     {
         healthScript = (HealthScript)GameObject.FindGameObjectWithTag("Player").GetComponent("HealthScript");

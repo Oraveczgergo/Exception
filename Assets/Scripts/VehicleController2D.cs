@@ -43,8 +43,7 @@ public class VehicleController2D : MonoBehaviour
     {
         if (inUse)
         {
-            healthText.SetActive(false);
-            vehicleHealthText.SetActive(true);
+            
             //gameObject.GetComponent<SpriteRenderer>().color = Color.white;
             //if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
             //{
@@ -109,6 +108,8 @@ public class VehicleController2D : MonoBehaviour
         {
             inUse = true;
             disabled = true;
+            healthText.SetActive(false);
+            vehicleHealthText.SetActive(true);
             player.SetActive(false);
             vehicleCamera.transform.position = transform.position;
             mainCamera.followedObject = vehicleCamera;
