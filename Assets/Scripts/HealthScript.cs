@@ -12,10 +12,14 @@ public class HealthScript : MonoBehaviour
     private float damageTime = 0;
     public float spikeKnockback = 20f;
     private Rigidbody2D rigidBody;
+    private CharacterController2D characterController;
+    private GameObject player;
 
     private void Start()
     {
         rigidBody = gameObject.GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        characterController = player.GetComponent<CharacterController2D>();
     }
 
     public void TakeDamage(int x)
@@ -49,8 +53,8 @@ public class HealthScript : MonoBehaviour
             currentHealth = maxHealth;
     }
     public void Death()
-    {
-        SceneManager.LoadScene("MainScene");
+    {        
+        characterController.RespawnPlayer();
     }
 
     void LateUpdate()

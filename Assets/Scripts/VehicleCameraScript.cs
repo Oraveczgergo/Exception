@@ -6,10 +6,11 @@ public class VehicleCameraScript : MonoBehaviour
 {
     private float speed = 10;
     private new Rigidbody2D rigidbody;
+    private Transform start;
     private void Start()
     {
+        start = GameObject.FindGameObjectWithTag("SaucerSpot").transform;
         rigidbody = GetComponent<Rigidbody2D>();
-        
     }
     public void SyncSpeed(float speed)
     {
@@ -32,5 +33,10 @@ public class VehicleCameraScript : MonoBehaviour
     {
         rigidbody.velocity = Vector2.zero;
         rigidbody.AddForce(new Vector2(speed / 2f, 0), ForceMode2D.Impulse);
+    }
+
+    public void ResetVehicleCamera()
+    {
+        transform.position = start.position;
     }
 }

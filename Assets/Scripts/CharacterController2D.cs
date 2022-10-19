@@ -11,9 +11,9 @@ public class CharacterController2D : MonoBehaviour
     public float movementSpeed = 30f;
     public float normalJumpForce = 60f;
     public float groundTouchDistance;
-    private float jumpAngleTreshold = 60f;
-    public float bounceForce = 5f;
+    private float jumpAngleTreshold = 60f;    
     private HealthScript healthScript;
+    private VehicleController2D vehicleController;
     private new Rigidbody2D rigidbody;
     public bool canJump = false;
     private bool needJump = false;
@@ -21,13 +21,14 @@ public class CharacterController2D : MonoBehaviour
     private bool speedBoost = false;
     private bool jumpReleased = false;
     private bool canDecelerate = false;
-    //private bool onGround = false;
     private float horizontal;
-    private CircleCollider2D circleCollider2D;
+    private WaterScript waterScript;
     private GameObject wayPoint01;
     private GameObject wayPoint02;
     private GameObject wayPoint03;
     private GameObject wayPoint04;
+    public GameObject water;
+    public int CurrentSectionId = 1;
 
     private float speed
     {
@@ -58,7 +59,8 @@ public class CharacterController2D : MonoBehaviour
         wayPoint04 = GameObject.FindGameObjectWithTag("WayPoint04");
         rigidbody = GetComponent<Rigidbody2D>();
         healthScript = (HealthScript)GetComponent("HealthScript");
-        circleCollider2D = transform.GetComponent<CircleCollider2D>();
+        waterScript = water.GetComponent<WaterScript>();
+        vehicleController = GameObject.FindGameObjectWithTag("Vehicle").GetComponent<VehicleController2D>();        
     }
     private void Update()
     {
@@ -73,29 +75,28 @@ public class CharacterController2D : MonoBehaviour
             jumpReleased = true;
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y / 2);
         }
-        if (Input.GetKeyDown(KeyCode.F1))
-            DebugTeleport(1);
-        if (Input.GetKeyDown(KeyCode.F2))
-            DebugTeleport(2);
-        if (Input.GetKeyDown(KeyCode.F3))
-            DebugTeleport(3);
-        if (Input.GetKeyDown(KeyCode.F4))
-            DebugTeleport(4);
+        if (Input.GetKeyDown(KeyCode.F1))        
+            Teleport(1);
+        
+        if (Input.GetKeyDown(KeyCode.F2))        
+            Teleport(2);           
+        
+        if (Input.GetKeyDown(KeyCode.F3))        
+            Teleport(3);           
+        
+        if (Input.GetKeyDown(KeyCode.F4))        
+            Teleport(4);                    
     }
 
     private void FixedUpdate()
     {
         if (horizontal * rigidbody.velocity.x < 0)
-            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x * 0.8f , rigidbody.velocity.y);
         if (Mathf.Abs(rigidbody.velocity.x) < maxSpeed)
             rigidbody.AddForce(new Vector2(horizontal * speed, 0), ForceMode2D.Impulse);
         if (horizontal == 0 && canDecelerate)
         {
             rigidbody.velocity *= Vector2.up;
-            //if (Mathf.Abs(rigidbody.velocity.x) < 0.1f)
-            //rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
-            // else
-            //rigidbody.velocity = new Vector2(rigidbody.velocity.x / decelaration, rigidbody.velocity.y);
         }
         if (canJump && needJump)
         {
@@ -104,6 +105,10 @@ public class CharacterController2D : MonoBehaviour
             needJump = false;
             StopVerticalVelocity();
             rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+        }        
+        if (rigidbody.velocity.y < -65)
+        {
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, -65);            
         }
         if (transform.position.y < -150)
         {
@@ -111,42 +116,39 @@ public class CharacterController2D : MonoBehaviour
         }
     }
 
-    private void DebugTeleport(int id)
+    private void Teleport(int id)
     {
         switch (id)
         {
             case 1:
                 transform.position = wayPoint01.transform.position;
+                CurrentSectionId = 1;
                 break;
             case 2:
                 transform.position = wayPoint02.transform.position;
+                CurrentSectionId = 2;
                 break;
             case 3:
                 transform.position = wayPoint03.transform.position;
+                CurrentSectionId = 3;
+                waterScript.WaterStart();
                 break;
             case 4:
                 transform.position = wayPoint04.transform.position;
+                CurrentSectionId = 4;
                 break;
         }
     }
     private void OnCollisionStay2D(Collision2D collision)
-    {
-        //Debug.Log("Enter");        
+    {             
         if (collision.gameObject.CompareTag("Terrain"))
         {
             if (!HasCollidedWithGround(collision.contacts))
             {
-                canJump = false;
-                //BounceByWall(collision.GetContact(0));
+                canJump = false;                
             }            
         }
-    }
-
-    //private void BounceByWall(ContactPoint2D point)
-    //{
-    //    Vector2 direction = Vector2.Reflect(rigidbody.velocity.normalized, point.normal);
-    //    rigidbody.AddForce(direction * bounceForce, ForceMode2D.Impulse);
-    //}
+    }   
 
     private bool HasCollidedWithGround(ContactPoint2D[] contacts)
     {
@@ -154,14 +156,11 @@ public class CharacterController2D : MonoBehaviour
         foreach (ContactPoint2D contactPoint in contacts)
         {
             if (Vector2.Angle(contactPoint.normal, validDirection) <= jumpAngleTreshold)
-            {
-                //Debug.Log("Ground: " + contactPoint);
+            {               
                 canDecelerate = true;
-                canJump = true;
-                //Debug.Log("CanJump");
+                canJump = true;                
                 return true;
-            }
-            //Debug.Log("NotGround: " + contactPoint);
+            }            
         }
         return false;
     }
@@ -171,36 +170,36 @@ public class CharacterController2D : MonoBehaviour
         if (collision.gameObject.CompareTag("Terrain"))
         {
             canDecelerate = false;
-            canJump = false;
-            //Debug.Log("Exit");
+            canJump = false;            
         }
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{        
-    //    if (collision.gameObject.CompareTag("Terrain"))
-    //    {
-    //        //canJump = false;
-    //        onGround = true;
-    //        //Debug.Log("Grounded: " + onGround);
-    //    }
-    //}
-
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.gameObject.CompareTag("Terrain"))
-    //    {
-    //        onGround = false;
-    //        //Debug.Log("Grounded: " + onGround);
-    //    }
-    //}
-
-    //private bool Grounded()
-    //{
-    //    //RaycastHit2D raycast = Physics2D.CircleCast(circleCollider2D.bounds.center, circleCollider2D.radius, Vector2.down, groundTouchDistance, terrainMask);
-    //    //return raycast.collider != null;
-    //    return onGround;
-    //}
+    public void RespawnPlayer()
+    {
+        if (vehicleController.inUse)
+        {            
+            vehicleController.RespawnSaucer();
+        }
+        rigidbody.velocity = Vector2.zero;
+        Teleport(CurrentSectionId);
+        healthScript.Heal(healthScript.maxHealth);
+        GameObject[] powerups = GameObject.FindGameObjectsWithTag("Powerup");
+        foreach (GameObject gameObject in powerups)
+        {
+            if (gameObject.name == "HealthPickup")
+                gameObject.GetComponent<HealthPickup>().ForceRespawn();
+            else if (gameObject.name == "SpeedBooster")
+                gameObject.GetComponent<SpeedBooster>().ForceRespawn();
+            else if (gameObject.name == "JumpBooster")
+                gameObject.GetComponent<JumpBooster>().ForceRespawn();
+        }
+        waterScript.WaterReset();
+        GameObject[] Bullets = GameObject.FindGameObjectsWithTag("Bullet");
+        foreach (GameObject gameObject in Bullets)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 
     private void StopVerticalVelocity()
     {

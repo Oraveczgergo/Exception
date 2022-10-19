@@ -7,6 +7,12 @@ public class WaterScript : MonoBehaviour
     private bool isOn = false;
     public int FramesForUpdate = 10;
     private int i = 0;
+    private float scaleY;
+
+    private void Start()
+    {
+        scaleY = transform.localScale.y;
+    }
     private void FixedUpdate()
     { //228
         if (transform.localScale.y < 228 && isOn)
@@ -41,5 +47,10 @@ public class WaterScript : MonoBehaviour
     public void WaterStop()
     {
         isOn = false;
+    }
+
+    public void WaterReset()
+    {
+        transform.localScale = new Vector3(transform.localScale.x, scaleY, transform.localScale.z);
     }
 }

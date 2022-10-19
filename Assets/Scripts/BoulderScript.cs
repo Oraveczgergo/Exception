@@ -11,4 +11,12 @@ public class BoulderScript : MonoBehaviour
             collision.collider.GetComponent<HealthScript>().Death();
         }
     }
+
+    private void FixedUpdate()
+    {
+        if (transform.position.y < -150)
+        {
+            gameObject.SetActive(false);
+        }
+    }
 }

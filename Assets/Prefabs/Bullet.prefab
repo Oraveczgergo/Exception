@@ -49,7 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5bef6fb0b738ce4499782ec9c0ec20f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ProjectileSpeed: 60
+  projectileSpeed: 60
+  duration: 2
 --- !u!212 &-5847577372208385791
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -117,7 +118,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 0
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -150,6 +151,12 @@ BoxCollider2D:
     serializedVersion: 2
     m_Bits: 4294967295
   m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
   m_IsTrigger: 1
@@ -5004,6 +5011,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2789585495689550919}
     m_Modifications:
+    - target: {fileID: 71939763697219957, guid: 1f9a1be852e16ad4eb05a51db2be1b17, type: 3}
+      propertyPath: m_Color.b
+      value: 0.054901965
+      objectReference: {fileID: 0}
+    - target: {fileID: 71939763697219957, guid: 1f9a1be852e16ad4eb05a51db2be1b17, type: 3}
+      propertyPath: m_Color.g
+      value: 0.054901965
+      objectReference: {fileID: 0}
     - target: {fileID: 1176513415843762491, guid: 1f9a1be852e16ad4eb05a51db2be1b17, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -5053,6 +5068,7 @@ PrefabInstance:
       value: TinyLight
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1f9a1be852e16ad4eb05a51db2be1b17, type: 3}

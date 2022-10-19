@@ -19,6 +19,7 @@ public class VehicleController2D : MonoBehaviour
     private GameObject[] backgroundImages;
     private VehicleCameraScript vehicleCameraScript;
     private GameObject vehicleCamera;
+    private GameObject saucerRespawnSpot;
 
     private new Rigidbody2D rigidbody;
 
@@ -36,6 +37,7 @@ public class VehicleController2D : MonoBehaviour
         vehicleHealthText = GameObject.FindGameObjectWithTag("UI_VehicleHealthText");
         vehicleHealthText.SetActive(false);
         vehicleHealthScript = (VehicleHealthScript)GetComponent("VehicleHealthScript");
+        saucerRespawnSpot = GameObject.FindGameObjectWithTag("SaucerSpot");
         vehicleCameraScript.SyncSpeed(movementSpeed);
     }
 
@@ -144,6 +146,18 @@ public class VehicleController2D : MonoBehaviour
         RotateToCursor(gameObject.transform);
         gameObject.transform.position = transform.position;
         gameObject.SetActive(true);
+    }
+    public void RespawnSaucer()
+    {
+        transform.position = saucerRespawnSpot.transform.position;
+        rigidbody.velocity *= Vector2.right;
+        vehicleHealthScript.Heal(vehicleHealthScript.maxHealth);
+        vehicleCameraScript.ResetVehicleCamera();
+        GameObject[] Meteorites = GameObject.FindGameObjectsWithTag("Meteor");
+        foreach (GameObject gameObject in Meteorites)
+        {
+            gameObject.SetActive(false);
+        }        
     }
 
     private void RotateToCursor(Transform o)

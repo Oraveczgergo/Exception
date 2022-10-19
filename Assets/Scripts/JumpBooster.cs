@@ -24,4 +24,10 @@ public class JumpBooster : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
+
+    public void ForceRespawn()
+    {
+        CancelInvoke();
+        gameObject.SetActive(true);
+    }
 }

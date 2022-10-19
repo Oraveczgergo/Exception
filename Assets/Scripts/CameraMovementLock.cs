@@ -10,11 +10,6 @@ public class CameraMovementLock : MonoBehaviour
         vehicleController2D = GameObject.FindGameObjectWithTag("Vehicle").GetComponent<VehicleController2D>();
     }
 
-    void Update()
-    {
-
-    }
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Vehicle"))

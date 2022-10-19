@@ -19,9 +19,14 @@ public class SpeedBooster : MonoBehaviour
             Invoke("Reactivate", 10f);
         }
     }
-
     private void Reactivate()
     {
+        gameObject.SetActive(true);
+    }
+
+    public void ForceRespawn()
+    {
+        CancelInvoke();
         gameObject.SetActive(true);
     }
 }

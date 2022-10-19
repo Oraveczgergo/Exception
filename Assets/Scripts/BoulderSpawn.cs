@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class BoulderSpawn : MonoBehaviour
 {
-    public GameObject boulder;
+    private GenericObjectPooler objectPooler;
+    public float spawnDelay = 5f;
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    private void Start()
     {
-        if (collision.CompareTag("Player"))
-        {
-            boulder.SetActive(true);
-        }
+        objectPooler = (GenericObjectPooler)GameObject.FindGameObjectWithTag("OP_Boulder").GetComponent("GenericObjectPooler");
+        InvokeRepeating("SpawnBoulder", 5f, 5f);
+    }
+
+    private void SpawnBoulder()
+    {
+        GameObject boulder = objectPooler.GetPooledObject();
+        boulder.transform.position = transform.position;
+        boulder.SetActive(true);       
     }
 }

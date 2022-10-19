@@ -142,6 +142,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 6769457491951204301}
     m_Modifications:
+    - target: {fileID: 546289316309741044, guid: 0afbc306190a8cf4595662ee7dc42f40, type: 3}
+      propertyPath: m_Color.b
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 546289316309741044, guid: 0afbc306190a8cf4595662ee7dc42f40, type: 3}
+      propertyPath: m_Color.r
+      value: 0.85098046
+      objectReference: {fileID: 0}
     - target: {fileID: 3918061839900309970, guid: 0afbc306190a8cf4595662ee7dc42f40, type: 3}
       propertyPath: m_Name
       value: SmallLight

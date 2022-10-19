@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Spike : MonoBehaviour
 {    
+    public int damage = 5;
     private void OnTriggerStay2D(Collider2D collision)
     {
         if(collision.gameObject.CompareTag("Player"))
         {            
-            collision.gameObject.GetComponent<HealthScript>().TakeSpikeDamage(2);
+            collision.gameObject.GetComponent<HealthScript>().TakeSpikeDamage(damage);
         }
     }
 }

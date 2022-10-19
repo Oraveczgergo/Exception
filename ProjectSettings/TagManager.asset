@@ -24,6 +24,8 @@ TagManager:
   - WayPoint04
   - OP_Fireball
   - Powerup
+  - OP_Boulder
+  - SaucerSpot
   layers:
   - Default
   - TransparentFX

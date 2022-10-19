@@ -25,4 +25,10 @@ public class HealthPickup : MonoBehaviour
     {
         gameObject.SetActive(true);
     }
+
+    public void ForceRespawn()
+    {
+        CancelInvoke();
+        gameObject.SetActive(true);
+    }
 }
