@@ -26,6 +26,7 @@ TagManager:
   - Powerup
   - OP_Boulder
   - SaucerSpot
+  - OP_BigMeteor
   layers:
   - Default
   - TransparentFX

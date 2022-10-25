@@ -6,12 +6,14 @@ public class MeteorSpawn : MonoBehaviour
 {
 
     public float spawnRate = 2f;
-    private GenericObjectPooler objectPooler;
+    private GenericObjectPooler meteorObjectPooler;
+    private GenericObjectPooler bigMeteorObjectPooler;
     private GameObject Target;
     private bool isActive = false;
     void Start()
     {
-        objectPooler = (GenericObjectPooler)GameObject.FindGameObjectWithTag("OP_Meteor").GetComponent("GenericObjectPooler");
+        meteorObjectPooler = (GenericObjectPooler)GameObject.FindGameObjectWithTag("OP_Meteor").GetComponent("GenericObjectPooler");
+        bigMeteorObjectPooler = (GenericObjectPooler)GameObject.FindGameObjectWithTag("OP_BigMeteor").GetComponent("GenericObjectPooler");
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,9 +37,18 @@ public class MeteorSpawn : MonoBehaviour
 
     void Spawn()
     {
-        GameObject gameObject = objectPooler.GetPooledObject();
+        GameObject meteor;
+        if (Random.Range(0,4) > 0)
+        {
+            meteor = meteorObjectPooler.GetPooledObject();
+        }
+        else
+        {
+            meteor = bigMeteorObjectPooler.GetPooledObject();
+        }
         if (gameObject == null) return;
-        gameObject.transform.position = new Vector3(Target.transform.position.x + Random.Range(10, 60), Target.transform.position.y +100);
-        gameObject.SetActive(true);
+        meteor.transform.position = new Vector3(Target.transform.position.x + Random.Range(-20, 90), Target.transform.position.y +100);
+        meteor.transform.rotation = Quaternion.Euler(0f, 0f, meteor.transform.rotation.y + Random.Range(-120, -30));
+        meteor.SetActive(true);
     }
 }

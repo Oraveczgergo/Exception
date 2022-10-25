@@ -6,7 +6,7 @@ public class MeteorScript : MonoBehaviour
 {
     public float ProjectileSpeed = 1f;
     public ParticleSystem SmokeEffect;
-    private bool canMove = true;
+    public bool canMove = true;
     void FixedUpdate()
     {
         if (canMove)
@@ -19,7 +19,8 @@ public class MeteorScript : MonoBehaviour
             SmokeEffect.Play();
         canMove = true;
         gameObject.GetComponent<SpriteRenderer>().enabled = true;
-        Invoke("Deactivate", 5f);
+        gameObject.GetComponent<CircleCollider2D>().enabled = true;
+        Invoke("Deactivate", 10f);
     }
 
     public void Deactivate()
@@ -29,6 +30,7 @@ public class MeteorScript : MonoBehaviour
         Invoke("Disable", 8f);
         canMove = false;
         gameObject.GetComponent<SpriteRenderer>().enabled = false;
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
     }
     void Disable()
     {

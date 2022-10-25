@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class MeteorCollision : MonoBehaviour
 {
-    private HealthScript healthScript;
+    private VehicleHealthScript healthScript;
     private void Start()
     {
-        healthScript = (HealthScript)gameObject.GetComponent("HealthScript");
+        healthScript = (VehicleHealthScript)gameObject.GetComponent("VehicleHealthScript");
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
