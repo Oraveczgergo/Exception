@@ -14,7 +14,8 @@ public class MeteorCollision : MonoBehaviour
         if (collision.gameObject.tag == "Meteor")
         {
             collision.gameObject.SetActive(false);
-            healthScript.TakeDamage(10);
+            if (healthScript != null)
+                healthScript.TakeDamage(10);
         }
     }
 }

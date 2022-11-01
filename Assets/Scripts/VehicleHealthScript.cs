@@ -20,7 +20,7 @@ public class VehicleHealthScript : HealthScript
     }
     private void LateUpdate()
     {
-        healthText.text = "Vehicle Health: " + currentHealth.ToString();
+        healthText.text = "Vehicle Health: " + currentHealth.ToString() + " / " + maxHealth.ToString();
     }
 
     public new void Death()

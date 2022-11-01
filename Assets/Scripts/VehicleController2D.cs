@@ -7,6 +7,7 @@ public class VehicleController2D : MonoBehaviour
     public float jumpForceInput = 60;
     public float movementSpeed;
     private float jumpForce;
+    private float lastMovement = 2;
     public bool inUse = false;
     private bool disabled = false;
     private bool disableJump = false;
@@ -44,35 +45,18 @@ public class VehicleController2D : MonoBehaviour
     void Update()
     {
         if (inUse)
-        {
-            
-            //gameObject.GetComponent<SpriteRenderer>().color = Color.white;
-            //if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D) || Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
-            //{
+        { 
             var movement = Input.GetAxis("Horizontal");
-            switch (movement)
+            if (lastMovement != movement)
             {
-                case 0:
-                    NormalMovement();
-                    vehicleCameraScript.NormalMovement();
-                    break;
-                case 1:
-                    FastMovement();
-                    vehicleCameraScript.FastMovement();
-                    break;
-                case -1:
-                    SlowMovement();
-                    vehicleCameraScript.SlowMovement();
-                    break;
+                lastMovement = movement;
+                MovementChange(movement);
             }
-            //}
-            //transform.position += new Vector3(movement, 0, 0) * Time.deltaTime * movementSpeed;
             if (Input.GetButtonDown("Jump") && !disableJump)
             {
                 rigidbody.velocity *= Vector2.right;
                 rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
             }
-            //player.transform.position = transform.position;
         }
         if (Input.GetButtonDown("Fire1") && inUse)
         {
@@ -84,6 +68,25 @@ public class VehicleController2D : MonoBehaviour
                 vehicleHealthScript.Death();
             else
                 gameObject.SetActive(false);
+        }
+    }
+
+    private void MovementChange(float movement)
+    {
+        switch (movement)
+        {
+            case 0:
+                NormalMovement();
+                vehicleCameraScript.NormalMovement();
+                break;
+            case 1:
+                FastMovement();
+                vehicleCameraScript.FastMovement();
+                break;
+            case -1:
+                SlowMovement();
+                vehicleCameraScript.SlowMovement();
+                break;
         }
     }
     private void NormalMovement()

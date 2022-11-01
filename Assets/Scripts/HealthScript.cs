@@ -59,6 +59,6 @@ public class HealthScript : MonoBehaviour
 
     void LateUpdate()
     {
-        healthText.text = "Health: " + currentHealth.ToString();
+        healthText.text = "Health: " + currentHealth.ToString() + " / " + maxHealth.ToString();
     }
 }
