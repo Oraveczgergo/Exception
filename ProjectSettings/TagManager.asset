@@ -27,6 +27,8 @@ TagManager:
   - OP_Boulder
   - SaucerSpot
   - OP_BigMeteor
+  - UI_SpeedBoostIcon
+  - UI_JumpBoostIcon
   layers:
   - Default
   - TransparentFX

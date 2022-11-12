@@ -28,28 +28,21 @@ public class CharacterController2D : MonoBehaviour
     private GameObject wayPoint03;
     private GameObject wayPoint04;
     public GameObject water;
+    private GameObject speedBoostIcon;
+    private GameObject jumpBoostIcon;
     public int CurrentSectionId = 1;
 
-    private float speed
+    private float GetSpeed()
     {
-        get
-        {
-            return (speedBoost ? movementSpeed * 1.5f : movementSpeed);
-        }
+        return (speedBoost ? movementSpeed * 1.5f : movementSpeed);        
     }
-    private float maxSpeed
+    private float GetMaxSpeed()
     {
-        get
-        {
-            return (speedBoost ? maxMovementSpeed * 1.5f : maxMovementSpeed);
-        }
+        return (speedBoost ? maxMovementSpeed * 1.5f : maxMovementSpeed);        
     }
-    private float jumpForce
+    private float GetJumpForce()
     {
-        get
-        {
-            return (jumpBoost ? normalJumpForce * 1.5f : normalJumpForce);
-        }
+        return (jumpBoost ? normalJumpForce * 1.5f : normalJumpForce);       
     }
     private void Start()
     {
@@ -57,10 +50,14 @@ public class CharacterController2D : MonoBehaviour
         wayPoint02 = GameObject.FindGameObjectWithTag("WayPoint02");
         wayPoint03 = GameObject.FindGameObjectWithTag("WayPoint03");
         wayPoint04 = GameObject.FindGameObjectWithTag("WayPoint04");
+        speedBoostIcon = GameObject.FindGameObjectWithTag("UI_SpeedBoostIcon");
+        jumpBoostIcon = GameObject.FindGameObjectWithTag("UI_JumpBoostIcon");
         rigidbody = GetComponent<Rigidbody2D>();
         healthScript = (HealthScript)GetComponent("HealthScript");
         waterScript = water.GetComponent<WaterScript>();
-        vehicleController = GameObject.FindGameObjectWithTag("Vehicle").GetComponent<VehicleController2D>();        
+        vehicleController = GameObject.FindGameObjectWithTag("Vehicle").GetComponent<VehicleController2D>();
+        speedBoostIcon.SetActive(false);
+        jumpBoostIcon.SetActive(false);
     }
     private void Update()
     {
@@ -89,22 +86,34 @@ public class CharacterController2D : MonoBehaviour
     }
 
     private void FixedUpdate()
-    {
+    {        
         if (horizontal * rigidbody.velocity.x < 0)
+        {            
             rigidbody.velocity = new Vector2(rigidbody.velocity.x * 0.8f , rigidbody.velocity.y);
-        if (Mathf.Abs(rigidbody.velocity.x) < maxSpeed)
-            rigidbody.AddForce(new Vector2(horizontal * speed, 0), ForceMode2D.Impulse);
-        if (horizontal == 0 && canDecelerate)
+        }           
+        if (Mathf.Abs(rigidbody.velocity.x) < GetMaxSpeed())
+        {            
+            rigidbody.AddForce(new Vector2(horizontal * GetSpeed(), 0), ForceMode2D.Impulse);
+            if(Mathf.Abs(rigidbody.velocity.x) > GetMaxSpeed())
+            {
+                rigidbody.velocity = new Vector2(GetMaxSpeed() * (rigidbody.velocity.x / Mathf.Abs(rigidbody.velocity.x)), rigidbody.velocity.y);
+            }
+        }
+        if (Mathf.Abs(rigidbody.velocity.x) < 0.5f)
         {
             rigidbody.velocity *= Vector2.up;
+        }        
+        if (Mathf.Abs(horizontal) < 0.5 && canDecelerate)
+        {            
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x * 0.6f, rigidbody.velocity.y);
         }
         if (canJump && needJump)
-        {
+        {            
             jumpReleased = false;
             CancelInvoke("JumpInputCancel");
             needJump = false;
             StopVerticalVelocity();
-            rigidbody.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            rigidbody.AddForce(new Vector2(0, GetJumpForce()), ForceMode2D.Impulse);
         }        
         if (rigidbody.velocity.y < -65)
         {
@@ -208,22 +217,26 @@ public class CharacterController2D : MonoBehaviour
     public void DoubleSpeed()
     {
         speedBoost = true;
+        speedBoostIcon.SetActive(true);
         Invoke("SpeedReset", 10f);
     }
 
     public void ExtraJumpForce()
     {
         jumpBoost = true;
+        jumpBoostIcon.SetActive(true);
         Invoke("JumpReset", 10f);
     }
 
     private void SpeedReset()
     {
+        speedBoostIcon.SetActive(false);
         speedBoost = false;
     }
 
     private void JumpReset()
     {
+        jumpBoostIcon.SetActive(false);
         jumpBoost = false;
     }
 
